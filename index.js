@@ -45,14 +45,13 @@ app.post("/weather", async (req, res) => {
         const humidity = resp.main.humidity
         const text = `Weather in ${city} is ${tempA}\xB0C but feels like ${tempF}\xB0C with ${humidity}% humidity`;
         console.log(text);
-        await web.chat.postMessage({
-          channel: process.env.CHANNEL,
-          text: text,
-        });
+        // await web.chat.postMessage({
+        //   channel: process.env.CHANNEL,
+        //   text: text,
+        // });
 
         return res.send(text);        
-        console.log("Message Posted");
-      });
+       });
   } catch (err) {
     console.log(err);
   }
