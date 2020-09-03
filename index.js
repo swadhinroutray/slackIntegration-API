@@ -50,7 +50,7 @@ app.post("/weather", async (req, res) => {
         //   text: text,
         // });
 
-        return res.send(text);        
+        res.send(text);        
        });
   } catch (err) {
     console.log(err);
