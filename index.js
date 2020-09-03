@@ -16,7 +16,7 @@ app.post("/hello", async (req, res) => {
       channel: process.env.CHANNEL,
       text: `Hello @${req.body.user_name}`,
     });
-    return res.send("Message Posted");
+    return res.send(`Hello @${req.body.user_name}`);
   } catch (error) {
     console.log(error);
     return res.send(error);
@@ -49,6 +49,8 @@ app.post("/weather", async (req, res) => {
           channel: process.env.CHANNEL,
           text: text,
         });
+
+        return res.send(text);        
         console.log("Message Posted");
       });
   } catch (err) {
