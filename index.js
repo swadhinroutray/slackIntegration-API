@@ -49,7 +49,7 @@ app.post("/weather", async (req, res) => {
         //   channel: process.env.CHANNEL,
         //   text: text,
         // });
-
+        console.log(text)
         res.send(text);        
        });
   } catch (err) {
