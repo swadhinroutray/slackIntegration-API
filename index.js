@@ -32,7 +32,7 @@ app.post("/getText", async (req, res) => {
 //TODO: Return Weather with proper formatting and log as well
 app.post("/weather", async (req, res) => {
   const city = req.body.text.trim();
-  // res.send({text:`Let me check the weather in ${city} for you!`})
+   res.send({text:`Let me check the weather in ${city} for you!`})
   console.log(city);
   try {
     const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.WEATHER_API_KEY}`;
