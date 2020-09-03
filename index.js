@@ -35,10 +35,11 @@ app.post("/weather", async (req, res) => {
   
   await fetch(
     "https://hooks.slack.com/services/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",
-    { method: 'POST',
+    { 
+    method: 'POST',
     body:{
-      "text": `Let me check the weather in ${city} for you!`,
-      "response_type": "ephemeral"
+      text: `Let me check the weather in ${city} for you!`,
+      response_type: "ephemeral"
     }  
   }
   );
@@ -59,7 +60,7 @@ app.post("/weather", async (req, res) => {
           text: text,
         });
         console.log(text);
-         res.send(text);
+        res.send(text);
       });
   } catch (err) {
     console.log(err);
