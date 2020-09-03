@@ -32,7 +32,16 @@ app.post("/getText", async (req, res) => {
 //TODO: Return Weather with proper formatting and log as well
 app.post("/weather", async (req, res) => {
   const city = req.body.text.trim();
-   res.send({text:`Let me check the weather in ${city} for you!`})
+  
+  fetch(
+    "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
+    { method: 'POST',
+    body:{
+      "text": `Let me check the weather in ${city} for you!`,
+      "response_type": "ephemeral"
+    }  
+  }
+  );
   console.log(city);
   try {
     const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.WEATHER_API_KEY}`;
@@ -42,16 +51,16 @@ app.post("/weather", async (req, res) => {
         console.log(resp);
         const tempA = Math.trunc(resp.main.temp - 273);
         const tempF = Math.trunc(resp.main.feels_like - 273);
-        const humidity = resp.main.humidity
+        const humidity = resp.main.humidity;
         const text = `Weather in ${city} is ${tempA}\xB0C but feels like ${tempF}\xB0C with ${humidity}% humidity`;
         console.log(text);
         await web.chat.postMessage({
           channel: process.env.CHANNEL,
           text: text,
         });
-        console.log(text)
-        // res.send(text);        
-       });
+        console.log(text);
+        // res.send(text);
+      });
   } catch (err) {
     console.log(err);
   }
