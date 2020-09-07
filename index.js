@@ -5,7 +5,7 @@ const app = express();
 const port = process.env.PORT || 8080;
 const axios = require("axios");
 const web = new WebClient(process.env.SLACK_TOKEN);
-const  qs = require('querystring')
+const qs = require("querystring");
 // const { createEventAdapter } = require('@slack/events-api');
 // const slackEvents = createEventAdapter(process.env.SLACK_SECRET);
 // app.use('/slack/events',slackEvents.expressMiddleware())
@@ -13,7 +13,14 @@ const fetch = require("node-fetch");
 app.use(require("body-parser").json());
 app.use(require("body-parser").urlencoded({ extended: true }));
 
-const CLIMATE = ["weather", "temperature", "climate","Climate","Temperature","Weather"];
+const CLIMATE = [
+  "weather",
+  "temperature",
+  "climate",
+  "Climate",
+  "Temperature",
+  "Weather",
+];
 
 app.post("/hello", async (req, res) => {
   try {
@@ -24,39 +31,42 @@ app.post("/hello", async (req, res) => {
     return res.send(`Hello @${req.body.user_name}`);
   } catch (error) {
     console.log(error);
-    return res.json({ok:true});
+    return res.json({ ok: true });
   }
 });
 
 app.post("/getText", (req, res) => {
   // console.log(req.body);
-  if (req.body.event.bot_profile!==undefined &&req.body.event.bot_profile.id === 'B01A41E149K') { 
+  if (req.body.token == process.env.SLACK_VERIFICATION_TOKEN)
+    return res.send(req.body.challenge);
+  if (
+    req.body.event.bot_profile !== undefined &&
+    req.body.event.bot_profile.id === "B01A41E149K"
+  ) {
     return res.end();
-  }else{
-  const event = req.body.event;
-  console.log(event)
-  let flag = 0;
-  for (i = 0; i < CLIMATE.length; i++) {
-    if (event.text.includes(CLIMATE[i])) {
-      flag = 1;
-      break;
+  } else {
+    const event = req.body.event;
+    console.log(event);
+    let flag = 0;
+    for (i = 0; i < CLIMATE.length; i++) {
+      if (event.text.includes(CLIMATE[i])) {
+        flag = 1;
+        break;
+      }
+    }
+    if (flag == 1) {
+      console.log("checking");
+      Weather(req, res);
+      res.sendStatus(200);
+    } else {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end();
     }
   }
-  if(flag==1){
-    console.log('checking')
-    Weather(req,res)
-    res.sendStatus(200)
-  }
-  else{
-  res.writeHead(200, {'Content-Type': 'application/json'});
-  res.end();
-  }
-}
 });
 
 //TODO: Return Weather with proper formatting and log as well
 app.post("/weather", async (req, res) => {
-
   await fetch(process.env.SLACK_WEBHOOK_URL, {
     method: "POST",
     body: {
@@ -88,7 +98,7 @@ app.post("/weather", async (req, res) => {
   }
 });
 
- async function Weather (req, res) {
+async function Weather(req, res) {
   // console.log(body);
   const response = await axios.post(
     "https://city-extractor.herokuapp.com/getcity",
@@ -102,7 +112,7 @@ app.post("/weather", async (req, res) => {
     }
   );
   let text;
-  let message={}
+  let message = {};
   console.log(response.data.city[0]);
   const CITY = response.data.city[0];
   const url = `http://api.openweathermap.org/data/2.5/weather?q=${CITY}&appid=${process.env.WEATHER_API_KEY}`;
@@ -119,10 +129,10 @@ app.post("/weather", async (req, res) => {
         channel: process.env.CHANNEL,
         text: text,
       });
-    return res.end()
+      return res.end();
     });
   // res.send("completed");
-};
+}
 
 app.listen(port, (err) => {
   if (err) return res.send(err);
