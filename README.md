@@ -1,3 +1,3 @@
 ### Slack API integration
-- Integrating Slack witha custom weather API.
+- Integrating Slack with a custom weather API.
 - Basic testing application

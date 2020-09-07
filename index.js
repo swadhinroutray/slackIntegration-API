@@ -35,7 +35,7 @@ app.post("/weather", async (req, res) => {
   const city = req.body.text.trim();
 
   await fetch(
-    "https://hooks.slack.com/services/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",
+    process.env.SLACK_WEBHOOK_URL,
     {
       method: "POST",
       body: {
@@ -72,7 +72,7 @@ app.post("/getCity", async (req, res) => {
   const body = { text: req.body.text.trim() };
   console.log(body);
   const response = await axios.post(
-    "http://localhost:5000/getcity",
+    "https://city-extractor.herokuapp.com/getcity",
     {
       text: req.body.text.trim(),
     },
